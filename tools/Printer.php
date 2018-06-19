@@ -48,4 +48,20 @@ HTML;
 	function dl($object) {
 		$object->dl();
 	}
+	/*
+	* Helpful error rendering... expects $error[0] to be an
+	* HTTP status code. How nice!
+	*/
+	function error($error) { switch($error[0]) {
+	case 403:
+		header("{$_SERVER[SERVER_PROTOCOL]} 403 Forbidden");
+		include "errors/403.php";
+	break; case 301:
+		$location = $error[1];
+		header("$_SERVER[SERVER_PROTOCOL]} 301 See Other");
+		header("Location: " . $location);
+	break; case 404:
+		header("$_SERVER[SERVER_PROTOCOL]} 404 Not Found");
+		include "errors/404.php";
+	} die; }
 }

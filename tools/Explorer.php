@@ -6,8 +6,27 @@ class Explorer {
 	private $relpath;
 	private $title;
 	private $description;
+	public $error = [];
 	function __construct($path) {
 		$this->path = $path;
+		// Directory traversal mitigation
+		if (strpos($this->resolvePath(), CONFIG_SERVEDIR) === false) {
+			$this->error = [403];
+			return; }
+		// Redirect paths like /path/to/../file/ -> /path/file/
+		if (strpos($this->resolvePath(), $this->path) === false) {
+			$this->relpath = substr(
+				$this->resolvePath(),
+				strlen(CONFIG_SERVEDIR));
+			$location = $this->resolve();
+			$this->error = [301, $this->resolve()];
+			return;
+		}
+		// 404 File Not Found
+		if (!file_exists($this->path)) {
+			$this->error = [404];
+			return;
+		}
 		$this->relpath = substr($path,
 			strlen(CONFIG_SERVEDIR));
 		$this->title = <<<TITLE
@@ -40,7 +59,7 @@ DESC;
 			array_pop($chunks);
 		foreach ($chunks as $n => $chunk) {
 			if (!is_file(CONFIG_SERVEDIR
-			. urldecode($chunkedpath) . $chunk)
+			. urldecode(@$chunkedpath) . $chunk)
 			|| (count($chunks) - $n - 1))
 				$chunk .= '/';
 			$chunkedpath .= urlencode($chunk);
@@ -66,5 +85,20 @@ BOX;
 	function dl() {
 		if (is_array($this->files)) return;
 		$this->files->dl();
+	}
+	function resolve() {
+		if ($this->relpath == '/') return CONFIG_WEBROOT;
+		return CONFIG_WEBROOT . "?q={$this->relpath}";
+	}
+	function resolvePath() {
+		$filename = str_replace('//', '/', $this->path);
+		$parts = explode('/', $filename);
+		$out = [];
+		foreach ($parts as $part) {
+			if ($part == '.') continue;
+			if ($part == '..') { array_pop($out); continue; }
+			$out[] = $part;
+		}
+		return implode('/', $out);
 	}
 }

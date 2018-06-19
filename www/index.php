@@ -5,19 +5,15 @@ include "{$ROOT}tools/Explorer.php";
 
 @$q = $_GET['q'] ?: '/';
 $servedir = CONFIG_SERVEDIR;
-
-if (strpos(
-	realpath("{$servedir}$q"),
-	realpath($servedir)
-) === false) die;
-
 $printer = new Raamen\Printer();
-$explorer = new Raamen\Explorer("{$servedir}$q");
 
+$explorer = new Raamen\Explorer("{$servedir}$q");
+if (count($explorer->error))
+	$printer->error($explorer->error);
 if (isset($_GET['dl'])) {
 	$explorer->dl();
-	die;
+	if (count($explorer->error))
+		$printer->error($explorer->error);
 }
-
 $printer->setLang('en');
 $printer->toHtml($explorer);
