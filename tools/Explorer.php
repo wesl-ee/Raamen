@@ -1,13 +1,21 @@
-<?php namespace RAL;
+<?php namespace Raamen;
 include 'File.php';
 class Explorer {
 	private $files;
 	private $path;
 	private $relpath;
+	private $title;
+	private $description;
 	function __construct($path) {
 		$this->path = $path;
 		$this->relpath = substr($path,
 			strlen(CONFIG_SERVEDIR));
+		$this->title = <<<TITLE
+$this->relpath - Raamen File Server
+TITLE;
+		$this->description = <<<DESC
+$this->relpath
+DESC;
 		if (is_file($path)) $this->files = new File($path);
 		else foreach (scandir($path) as $f) {
 			if ($f == '.' || $f == '..') continue;
@@ -38,12 +46,12 @@ class Explorer {
 			$chunkedpath .= urlencode($chunk);
 			$chunkedpath = str_replace("%2F", "/", $chunkedpath);
 			if ($chunkedpath == '/')
-				$href = CONFIG_WEBROOT;
+				$href = htmlspecialchars(CONFIG_WEBROOT);
 			else
-				$href = "?q=$chunkedpath";
-			print <<<HOVERBOX
+				$href = htmlspecialchars(CONFIG_WEBROOT . "?q=$chunkedpath");
+			print <<<BOX
 <a href="$href">$chunk</a>
-HOVERBOX;
+BOX;
 		}
 		print "</h1>\n";
 	}
@@ -53,6 +61,8 @@ HOVERBOX;
 			print "$count files\n";
 		}
 	}
+	function title() { return $this->title; }
+	function description() { return $this->description; }
 	function dl() {
 		if (is_array($this->files)) return;
 		$this->files->dl();

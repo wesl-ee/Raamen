@@ -11,8 +11,8 @@ if (strpos(
 	realpath($servedir)
 ) === false) die;
 
-$printer = new RAL\Printer();
-$explorer = new RAL\Explorer("{$servedir}$q");
+$printer = new Raamen\Printer();
+$explorer = new Raamen\Explorer("{$servedir}$q");
 
 if (isset($_GET['dl'])) {
 	$explorer->dl();

@@ -1,4 +1,4 @@
-<?php namespace RAL;
+<?php namespace Raamen;
 class File {
 	private $path;
 	private $relpath;
@@ -13,9 +13,9 @@ class File {
 		$this->stat = stat($path);
 	}
 	public function toHtml() {
-		$ctime = date(DATE_RSS, $this->stat['ctime']);
-		$size = $this->stat['size'];
-		$href = $this->resolve();
+		$ctime = htmlspecialchars(date(DATE_RSS, $this->stat['ctime']));
+		$size = htmlspecialchars($this->stat['size']);
+		$href = htmlspecialchars($this->resolve());
 		print <<<HTML
 <tr>
 	<td><a href="$href">{$this->basename}</a></td>
@@ -43,11 +43,10 @@ HTML;
 		return CONFIG_WEBROOT . "?q={$this->relpath}";
 	}
 	public function display() {
-		$atime = date(DATE_RSS, $this->stat['atime']);
 		$ctime = date(DATE_RSS, $this->stat['ctime']);
 		$size = $this->stat['size'];
 		$mimetype = mime_content_type($this->path);
-		$dllink = $this->dllink();
+		$dllink = htmlspecialchars($this->dllink(), ENT_QUOTES);
 		print <<<HTML
 <table>
 <tr><th>Mimetype</th><td>$mimetype</td></tr>

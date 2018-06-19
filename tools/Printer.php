@@ -1,25 +1,33 @@
-<?php namespace RAL;
+<?php namespace Raamen;
 class Printer {
+	private $lang;
 	function setLang($lang) {
-		$language = $lang;
-		putenv("LANG=".$language);
-		setlocale(LC_ALL, $language);
+		$this->lang = $lang;
+		putenv("LANG=".$lang);
+		setlocale(LC_ALL, $lang);
 
-		$domain = "RAL";
+		$domain = "Raamen";
 		bindtextdomain($domain, "locale");
 		textdomain($domain);
 	}
 	function toHtml($object) {
-		$this->preambleHtml();
+		$this->preambleHtml($object->title(), $object->description());
 		$object->toHtml();
 		$this->closingHtml();
 	}
-	function preambleHtml() {
-		$stylesheet = CONFIG_WEBROOT . "style.css";
+	function preambleHtml($title, $description) {
+		$title = htmlspecialchars($title);
+		$description = htmlspecialchars($description, ENT_QUOTES);
+		$stylesheet = htmlspecialchars(CONFIG_WEBROOT . "style.css");
+		$lang = htmlspecialchars($this->lang, ENT_QUOTES);
 		print <<<HTML
 <!DOCTYPE HTML>
+<html lang="$lang">
 <head>
 	<link rel=stylesheet type="text/css" href="$stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>$title</title>
+	<meta name=description content="$description">
 </head>
 <body>
 HTML;
@@ -33,6 +41,7 @@ HTML;
 		print <<<HTML
 </footer>
 </body>
+</html>
 
 HTML;
 	}
