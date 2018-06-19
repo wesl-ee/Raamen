@@ -44,7 +44,7 @@ HTML;
 	}
 	public function display() {
 		$ctime = date(DATE_RSS, $this->stat['ctime']);
-		$size = $this->stat['size'];
+		$size = $this->human_filesize($this->stat['size']);
 		$mimetype = mime_content_type($this->path);
 		$dllink = htmlspecialchars($this->dllink(), ENT_QUOTES);
 		print <<<HTML
@@ -60,8 +60,16 @@ HTML;
 		header("Content-Type:".mime_content_type($this->path));
 		header("Content-Disposition: inline; filename=\"" . $this->basename . "\"");
 		readfile($this->path);
+		die;
 	}
 	public function dllink() {
+		if (CONFIG_CDN_SERVEDIR)
+			return CONFIG_CDN_SERVEDIR . $this->relpath;
 		return CONFIG_WEBROOT . "?q={$this->relpath}&dl";
+	}
+	function human_filesize($bytes, $decimals = 2) {
+		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
+		$factor = floor((strlen($bytes) - 1) / 3);
+		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 	}
 }
