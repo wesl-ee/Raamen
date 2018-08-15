@@ -1,14 +1,18 @@
 <?php namespace Raamen;
 class Printer {
 	private $lang;
+	private $theme;
 	function setLang($lang) {
 		$this->lang = $lang;
-		putenv("LANG=".$lang);
+		putenv("LANG=$lang");
 		setlocale(LC_ALL, $lang);
 
 		$domain = "Raamen";
 		bindtextdomain($domain, "locale");
 		textdomain($domain);
+	}
+	function setTheme($theme) {
+		$this->theme = $theme;
 	}
 	function toHtml($object) {
 		$this->preambleHtml($object->title(), $object->description());
@@ -20,6 +24,7 @@ class Printer {
 		$description = htmlspecialchars($description, ENT_QUOTES);
 		$stylesheet = htmlspecialchars(CONFIG_WEBROOT . "style.css");
 		$lang = htmlspecialchars($this->lang, ENT_QUOTES);
+		$theme = htmlspecialchars($this->theme, ENT_QUOTES);
 		print <<<HTML
 <!DOCTYPE HTML>
 <html lang="$lang">

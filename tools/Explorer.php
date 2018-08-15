@@ -6,8 +6,10 @@ class Explorer {
 	private $relpath;
 	private $title;
 	private $description;
+	private $authenticator;
 	public $error = [];
-	function __construct($path) {
+	function __construct($path, $authenticator) {
+		$this->authenticator = $authenticator;
 		$this->path = $path;
 		// Directory traversal mitigation
 		if (strpos($this->resolvePath(), CONFIG_SERVEDIR) === false) {
@@ -47,7 +49,7 @@ DESC;
 			$this->files[0]->openingHtml();
 			foreach ($this->files as $f) $f->toHtml();
 			$this->files[0]->closingHtml();
-		} else $this->files->display();
+		} else $this->files->display($this->authenticator);
 		$this->closingHtml();
 	}
 	function openingHtml() {
@@ -62,7 +64,7 @@ DESC;
 			. urldecode(@$chunkedpath) . $chunk)
 			|| (count($chunks) - $n - 1))
 				$chunk .= '/';
-			$chunkedpath .= urlencode($chunk);
+			@$chunkedpath .= urlencode($chunk);
 			$chunkedpath = str_replace("%2F", "/", $chunkedpath);
 			if ($chunkedpath == '/')
 				$href = htmlspecialchars(CONFIG_WEBROOT);

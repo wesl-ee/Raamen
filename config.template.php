@@ -10,7 +10,7 @@ define("CONFIG_SERVEDIR", "/path/to/files/you/want/to/serve/desu");
 * Also, the trailing slash is important.
 */
 define("CONFIG_WEBROOT", "https://example.com/path/to/raamen/");
-/* CONFIG_CDN_SERVEDIR
+/* CONFIG_CDN_SERVEDIR and CONFIG_CDN_PROTOCOL
 * If set, expect the files mentioned in CONFIG_SERVEDIR to be available here
 * Set to false if you do not have these files on a content distribution
 * network.
@@ -18,6 +18,25 @@ define("CONFIG_WEBROOT", "https://example.com/path/to/raamen/");
 * devastating to your server's performance, since the file is (in this
 * case) being served by PHP (via readfile()) rather than a proper web
 * server.
-* Also, you should not use a trailing slash here.
+* Make sure that the  protocol you pick supports appending credentials
+* via the URL string like https://user:pw@localhost/path/to/file
 */
-define("CONFIG_CDN_SERVEDIR", "https://cdn.example.com/to/serve/desu");
+define("CONFIG_CDN_SERVEDIR", "cdn.raamen.org");
+define("CONFIG_CDN_PROTOCOL", "https://");
+
+/* CONFIG_PW_FILE
+* The flat-file for CDN authentication. Point your CDN to check for valid
+* users here and make sure both PHP and your CDN can read from it
+*/
+define("CONFIG_PW_FILE", "/path/to/plain/file.users");
+
+/* CONFIG_MAX_CREDS
+* Maximum users listed in CONFIG_PW_FILE. They're rotated every hour by a
+* cron job (make sure you set this up!)
+*/
+define("CONFIG_MAX_CREDS", 8);
+
+/* CONFIG_PW
+* This is just until I get a real captcha system set up
+*/
+define("CONFIG_PW", "hackme");
