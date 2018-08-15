@@ -7,7 +7,7 @@ include "{$ROOT}tools/Authenticator.php";
 @$q = $_GET['q'] ?: '/';
 $servedir = CONFIG_SERVEDIR;
 $printer = new Raamen\Printer();
-$authenticator = new Raamen\Authenticator($_COOKIE['user'], $_COOKIE['pass']);
+$authenticator = new Raamen\Authenticator(@$_COOKIE['user'], @$_COOKIE['pass']);
 
 $explorer = new Raamen\Explorer("{$servedir}$q", $authenticator);
 if (count($explorer->error))

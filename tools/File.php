@@ -5,7 +5,8 @@ class File {
 	private $basename;
 	private $stat;
 	private $isfile;
-	public function __construct($path) {
+	private $authenticator;
+	public function __construct($path, $authenticator) {
 		$this->isfile = is_file($path);
 		if (!$this->isfile) $path .= '/';
 		$this->path = $path;
@@ -14,6 +15,7 @@ class File {
 		$this->basename = basename($path);
 		if (!$this->isfile) $this->basename .= '/';
 		$this->stat = stat($path);
+		$this->authenticator = $authenticator;
 	}
 	public function toHtml() {
 		$datetime = htmlspecialchars(date(DATE_W3C,
@@ -35,7 +37,7 @@ class File {
 HTML;
 	}
 	public function openingHtml() {
-		print <<<HTML
+		 print <<<HTML
 <table><tr>
 	<th>File</th>
 	<th>Size</th>
@@ -52,7 +54,7 @@ HTML;
 	public function resolve() {
 		return CONFIG_WEBROOT . "?q={$this->relpath}";
 	}
-	public function display($authenticator) {
+	public function display() {
 		$datetime = htmlspecialchars(date(DATE_W3C,
 			$this->stat['ctime']), ENT_QUOTES);
 		$prettyctime = htmlspecialchars(date('d M Y',
@@ -68,16 +70,16 @@ HTML;
 <tr><th>Size</th><td>$size</td></tr>
 </table>
 HTML;
-		if ($authenticator->authed()) {
+		if ($this->authenticator->authed()) {
 			$dllink = htmlspecialchars(
-				$this->dllink($authenticator->userstring()),
+				$this->dllink($this->authenticator->userstring()),
 				ENT_QUOTES
 			);
 			print <<<HTML
 <a href="$dllink">Download</a><br />
 HTML;
 		} else {
-			$authenticator->htmlChallenge();
+			$this->authenticator->htmlChallenge();
 		}
 	}
 	public function dl() {

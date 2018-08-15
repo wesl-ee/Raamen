@@ -35,8 +35,3 @@ define("CONFIG_PW_FILE", "/path/to/plain/file.users");
 * cron job (make sure you set this up!)
 */
 define("CONFIG_MAX_CREDS", 8);
-
-/* CONFIG_PW
-* This is just until I get a real captcha system set up
-*/
-define("CONFIG_PW", "hackme");

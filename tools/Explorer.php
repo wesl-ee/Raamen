@@ -37,10 +37,10 @@ TITLE;
 		$this->description = <<<DESC
 $this->relpath
 DESC;
-		if (is_file($path)) $this->files = new File($path);
+		if (is_file($path)) $this->files = new File($path, $this->authenticator);
 		else foreach (scandir($path) as $f) {
 			if ($f == '.' || $f == '..') continue;
-			$this->files[] = new File("{$path}$f");
+			$this->files[] = new File("{$path}$f", $this->authenticator);
 		}
 	}
 	function toHtml() {

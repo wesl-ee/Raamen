@@ -14,6 +14,78 @@ class Authenticator {
 			$this->authed = false;
 	}
 	public function authed() { return $this->authed; }
+	public function genAuth() {
+		$height = 70; $width = 165;
+		$centerX = $width / 2; $centerY = $height / 2;
+
+
+		$id = uniqid();
+		$imgfile = "$id.jpg";
+		$keyfile = "$id.txt";
+
+		$keypath = CONFIG_LOCALROOT . "tmp/robocheck-answers/"
+		. substr($id, 0, 2) . '/';
+		$imgpath = CONFIG_LOCALROOT . "www/robocheck/"
+		. substr($id, 0, 2) . '/';
+		if (!is_dir($keypath)) mkdir($keypath);
+		if (!is_dir($imgpath)) mkdir($imgpath);
+
+		$a = rand(0, 100); $b = rand(0, 100);
+		$answer = $a + $b; $text = "$a + $b";
+		$lines = 5; $angle = 0;
+		$font = CONFIG_LOCALROOT . "www/res/mouthbrebb.ttf";
+
+		$im = imagecreatetruecolor($width, $height);
+		$bg = imagecolorallocate($im, 230, 80, 0);
+		$fg = imagecolorallocate($im, 255, 255, 255);
+		$ns = imagecolorallocate($im, 200, 200, 200);
+		imagefill($im, 0, 0, $bg);
+
+		$centerX = $width / 2;
+		$centerY = $height / 2;
+		list($left, $bottom, $right, , , $top) = imageftbbox(20, $angle, $font, $text);
+		$left_offset = ($right - $left) / 2;
+		$top_offset = ($bottom - $top) / 2;
+		$x = $centerX - $left_offset;
+		$y = $centerY + $top_offset;
+		imagettftext($im, 20, $angle, $x, $y, $fg, $font, $text);
+		while ($lines--) {
+			imageline($im, 0, rand(0, $height), $width, rand(0, $height), $fg);
+		}
+		for($i=0;$i<1000;$i++) {
+			imagesetpixel($im,rand()%$width,rand()%$height,$fg);
+		}
+		imagegif($im, $imgpath . $imgfile);
+		imagedestroy($im);
+
+		// Stash the answer in tmp/robocheck-answers/uniqid().txt
+		file_put_contents($keypath . $keyfile, $answer);
+
+		return [
+			"id" => $id,
+			"src" => CONFIG_WEBROOT . "robocheck/"
+			. substr($id, 0, 2) . "/$imgfile",
+			"height" => $height,
+			"width" => $width
+		];
+	}
+	public function checkAuth($id, $answer) {
+//		$imgfile = CONFIG_LOCALROOT . "www/robocheck/$id.jpg";
+		$keypath = CONFIG_LOCALROOT . "tmp/robocheck-answers/"
+		. substr($id, 0, 2) . "/$id.txt";
+
+		if (strpos($this->get_absolute_path($keypath)
+		, CONFIG_LOCALROOT . "tmp/robocheck-answers") !== 0)
+			return false;
+		if (!is_file($keypath)) return false;
+
+		$a = chop(file_get_contents($keypath));
+
+//		unlink($imgfile);
+		unlink($answerfile);
+
+		return ($a == $answer);
+	}
 	public function verify() {
 		$fh = fopen(CONFIG_PW_FILE, 'r');
 		while ($line = fgets($fh)) {
@@ -24,9 +96,15 @@ class Authenticator {
 		} return false;
 	}
 	public function htmlChallenge() {
-		$robocode = 'robocode';
+		$robocheck = $this->genAuth();
+		$robosrc = $robocheck['src'];
+		$robocode = $robocheck['id'];
+		$height = $robocheck['height'];
+		$width = $robocheck['width'];
 		print <<<HTML
-<form method=POST>
+		<p>Please solve the following:</p>
+<form method=POST><div class=robocheck>
+		<img height=$height width=$width src="$robosrc">
 		<input name=robocheckid type=hidden value=$robocode>
 		<input name=robocheckanswer
 		tabindex=1
@@ -34,14 +112,14 @@ class Authenticator {
 		autocomplete=off>
 		<button class=button name=post value=post type=submit
 		tabindex=2>Next</button>
-</form>
+</div></form>
 HTML;
 	}
 	public function isAuthAttempt($POST) {
 		return @$POST['robocheckanswer'] && @$POST['robocheckid'];
 	}
 	public function auth($POST) {
-		if ($POST['robocheckanswer'] == CONFIG_PW) {
+		if ($this->checkauth($POST['robocheckid'], $POST['robocheckanswer'])) {
 			$this->authed = true;
 			$creds = $this->getCreds();
 			$this->user = $creds['user'];
@@ -68,5 +146,19 @@ HTML;
 	}
 	public function userstring() {
 		return "{$this->user}:{$this->pass}";
+	}
+	/*
+	 * D-R-A-K-E THAT'S M-E
+	*/
+	function get_absolute_path($path)
+	{
+		$parts = explode('/', $path);
+		$absolutes = [];
+		foreach($parts as $part) {
+			if ($part == '.') continue;
+			if ($part == '..') array_pop($absolutes);
+			else $absolutes[] = $part;
+		}
+		return implode('/', $absolutes);
 	}
 }
