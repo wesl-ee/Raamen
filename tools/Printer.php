@@ -38,11 +38,19 @@ class Printer {
 HTML;
 	}
 	function closingHtml() {
+		$dmcamail = CONFIG_DMCA_MAIL;
 		print <<<HTML
 <hr /><footer>
 
 HTML;
-		print "Raamen File Browser v0";
+		print <<<HTML
+		<span>Raamen File Browser v0</span>
+		<span>Created by <a href="https://prettyboytellem.com">
+		Prettyboy-yumi
+		</a></span>
+		<span>Hosted by <a href="mailto:$dmcamail">
+		$dmcamail</a></span>
+HTML;
 		print <<<HTML
 </footer>
 </body>

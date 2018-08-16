@@ -35,3 +35,8 @@ define("CONFIG_PW_FILE", "/path/to/plain/file.users");
 * cron job (make sure you set this up!)
 */
 define("CONFIG_MAX_CREDS", 8);
+
+/* CONFIG_DMCA_MAIL
+* They're going to come after you, it's only a matter of time!
+*/
+define("CONFIG_DMCA_MAIL", "/dev/null");

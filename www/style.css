@@ -1,4 +1,4 @@
-body { color: #aaa; background-color: #222; }
+body { color: White; background-color: #222; }
 h1 { font-weight: normal; }
 h1 a, button { border-top: 1px solid;
 font-size: 100%;
@@ -6,10 +6,12 @@ border-bottom: 1px solid;
 border-right: 1px solid;
 padding-right: 8px;
 padding-left: 8px;
+background-color: White;
+color: Black;
 text-decoration: none; }
 h1 a:first-child { border-left: 1px solid; }
 h1 { font-size: 1em; }
-a { color: Orange; }
+a { color: #00e4ff; }
 td, th { padding: 0 20px 0 0; }
 .robocheck { display: inline-block; padding: 5px; }
 .robocheck>* { display: block; margin: auto; text-align: center; }
@@ -17,5 +19,7 @@ td, th { padding: 0 20px 0 0; }
 input { border: 1px solid;
 border-radius: 0 0 5px; }
 button { background-color: white;
-border-left: 1px solid;
-}
+border-left: 1px solid; }
+footer { text-align: right; }
+footer > * { display: block; border-right: 2px solid; padding-right: 5px;
+margin-right: 5px; font-size: 80%; }

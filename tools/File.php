@@ -19,19 +19,19 @@ class File {
 	}
 	public function toHtml() {
 		$datetime = htmlspecialchars(date(DATE_W3C,
-			$this->stat['ctime']), ENT_QUOTES);
-		$prettyctime = htmlspecialchars(date('d M Y',
-			$this->stat['ctime']));
+			$this->stat['mtime']), ENT_QUOTES);
+		$prettymtime = htmlspecialchars(date('d M Y',
+			$this->stat['mtime']));
 		if ($this->isfile)
 			$size = htmlspecialchars($this->human_filesize($this->stat['size']));
 		else
 			$size = '';
-		$href = htmlspecialchars($this->resolve());
+		$href = htmlspecialchars($this->resolve(), ENT_QUOTES);
 		print <<<HTML
 <tr>
 	<td><a href="$href">{$this->basename}</a></td>
 	<td>$size</td>
-	<td><date datetime="$datetime">$prettyctime</date></td>
+	<td><date datetime="$datetime">$prettymtime</date></td>
 </tr>
 
 HTML;
@@ -41,7 +41,7 @@ HTML;
 <table><tr>
 	<th>File</th>
 	<th>Size</th>
-	<th>Created</th>
+	<th>Last Modified</th>
 </tr>
 
 HTML;
@@ -52,7 +52,8 @@ HTML;
 HTML;
 	}
 	public function resolve() {
-		return CONFIG_WEBROOT . "?q={$this->relpath}";
+		return str_replace('%2F', '/',
+			CONFIG_WEBROOT . "?q=" . urlencode($this->relpath));
 	}
 	public function display() {
 		$datetime = htmlspecialchars(date(DATE_W3C,
@@ -66,7 +67,7 @@ HTML;
 		print <<<HTML
 <table>
 <tr><th>Mimetype</th><td>$mimetype</td></tr>
-<tr><th>Created</th><td><date datetime="$datetime">$prettyctime</date></td></tr>
+<tr><th>Last Modified</th><td><date datetime="$datetime">$prettyctime</date></td></tr>
 <tr><th>Size</th><td>$size</td></tr>
 </table>
 HTML;
@@ -76,7 +77,7 @@ HTML;
 				ENT_QUOTES
 			);
 			print <<<HTML
-<a href="$dllink">Download</a><br />
+<a href="$dllink">Download File</a><br />
 HTML;
 		} else {
 			$this->authenticator->htmlChallenge();

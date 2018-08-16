@@ -49,7 +49,7 @@ DESC;
 			$this->files[0]->openingHtml();
 			foreach ($this->files as $f) $f->toHtml();
 			$this->files[0]->closingHtml();
-		} else $this->files->display($this->authenticator);
+		} else $this->files->display();
 		$this->closingHtml();
 	}
 	function openingHtml() {
