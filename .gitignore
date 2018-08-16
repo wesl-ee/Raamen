@@ -1,5 +1,5 @@
 config.php
 www/robocheck/*
-!www/robocheck/.keep
+!www/robocheck/.gitkeep
 tmp/robocheck-answers/*
-!tmp/robocheck-answers/.keep
+!tmp/robocheck-answers/.gitkeep
