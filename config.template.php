@@ -10,6 +10,10 @@ define("CONFIG_SERVEDIR", "/path/to/files/you/want/to/serve/desu");
 * Also, the trailing slash is important.
 */
 define("CONFIG_WEBROOT", "https://example.com/path/to/raamen/");
+/* CONFIG_LOCALROOT
+* Where this git repo lives locally
+*/
+define("CONFIG_LOCALROOT", "/local/path/to/raamen");
 /* CONFIG_CDN_SERVEDIR and CONFIG_CDN_PROTOCOL
 * If set, expect the files mentioned in CONFIG_SERVEDIR to be available here
 * Set to false if you do not have these files on a content distribution
