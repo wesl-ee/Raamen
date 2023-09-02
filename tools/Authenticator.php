@@ -23,9 +23,9 @@ class Authenticator {
 		$imgfile = "$id.jpg";
 		$keyfile = "$id.txt";
 
-		$keypath = CONFIG_LOCALROOT . "tmp/robocheck-answers/"
+		$keypath = CONFIG_SERVEDIR . "tmp/robocheck-answers/"
 		. substr($id, 0, 2) . '/';
-		$imgpath = CONFIG_LOCALROOT . "www/robocheck/"
+		$imgpath = CONFIG_SERVEDIR . "www/robocheck/"
 		. substr($id, 0, 2) . '/';
 		if (!is_dir($keypath)) mkdir($keypath);
 		if (!is_dir($imgpath)) mkdir($imgpath);
@@ -33,7 +33,7 @@ class Authenticator {
 		$a = rand(0, 100); $b = rand(0, 100);
 		$answer = $a + $b; $text = "$a + $b";
 		$lines = 5; $angle = 0;
-		$font = CONFIG_LOCALROOT . "www/res/mouthbrebb.ttf";
+		$font = CONFIG_SERVEDIR . "www/res/mouthbrebb.ttf";
 
 		$im = imagecreatetruecolor($width, $height);
 		$bg = imagecolorallocate($im, 230, 80, 0);
@@ -70,12 +70,12 @@ class Authenticator {
 		];
 	}
 	public function checkAuth($id, $answer) {
-//		$imgfile = CONFIG_LOCALROOT . "www/robocheck/$id.jpg";
-		$keypath = CONFIG_LOCALROOT . "tmp/robocheck-answers/"
+//		$imgfile = CONFIG_SERVEDIR . "www/robocheck/$id.jpg";
+		$keypath = CONFIG_SERVEDIR . "tmp/robocheck-answers/"
 		. substr($id, 0, 2) . "/$id.txt";
 
 		if (strpos($this->get_absolute_path($keypath)
-		, CONFIG_LOCALROOT . "tmp/robocheck-answers") !== 0)
+		, CONFIG_SERVEDIR . "tmp/robocheck-answers") !== 0)
 			return false;
 		if (!is_file($keypath)) return false;
 
