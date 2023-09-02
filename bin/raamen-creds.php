@@ -53,4 +53,4 @@ function randomHex($len) {
 // ?
 function x($a, $b) { for ($j = 0; $j < strlen($b);)
 	for ($k = 0; $k < strlen($a); $j++, $k++)
-	@$user .= $b{$j} ^ $a{$k}; return $user; }
+	@$user .= $b[$j] ^ $a[$k]; return $user; }
