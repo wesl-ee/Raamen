@@ -16,11 +16,10 @@ I've bundled this software into a container with lighttpd configured perfectly
 for serving large files and host this container on ghcr.io:
 
 ```
-docker pull ghcr.io/wesl-ee/raamen:v1.0
 docker run \
 	-p 8000:80 \
 	--mount type=bind,source=/path/to/share,target=/mnt \
-	raamen:latest
+	ghcr.io/wesl-ee/raamen:v1.0
 ```
 
 Then visit [localhost:8000](http://localhost:8000) to see it serving files from
