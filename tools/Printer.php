@@ -55,7 +55,7 @@ HTML;
 <aside>
 <img style="border: 1px solid" src="based.gif"><br />
 Raamen is back <strong><a href="https://wesl.ee">TYBG</a></strong>!<br />
-Supports all browsers <strong><a href="https://wesl.ee">TYBG</a></strong>!
+Browse the code <a href="https://github.com/wesl-ee/raamen">on GitHub</a>
 </aside>
 </footer>
 </body>
