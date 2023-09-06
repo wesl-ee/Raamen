@@ -1,4 +1,4 @@
-config.php
+config/config.php
 www/robocheck/*
 !www/robocheck/.gitkeep
 tmp/robocheck-answers/*

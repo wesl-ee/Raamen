@@ -86,15 +86,17 @@ HTML;
 	public function dl() {
 		header("Content-Type:".mime_content_type($this->path));
 		header("Content-Disposition: inline; filename=\"" . $this->basename . "\"");
-		readfile($this->path);
+		if (CONFIG_X_LIGHTTPD_SEND) {
+			header("X-LIGHTTPD-send-file: " . $this->path);
+		} else if (CONFIG_X_SENDFILE) {
+			header("X-SENDFILE: " . $this->path);
+		} else {
+			readfile($this->path);
+		}
 		die;
 	}
 	public function dllink($userstring = '') {
-		if (CONFIG_CDN_SERVEDIR) {
-			return CONFIG_CDN_PROTOCOL . "$userstring@"
-			. CONFIG_CDN_SERVEDIR . $this->relpath;
-		}
-		return CONFIG_WEBROOT . "?q={$this->relpath}&dl";
+		return CONFIG_WEBROOT . "?q=".urlencode($this->relpath)."&dl=".urlencode($userstring);
 	}
 	function human_filesize($bytes, $decimals = 2) {
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');

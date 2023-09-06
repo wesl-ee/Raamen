@@ -70,7 +70,8 @@ class Authenticator {
 		];
 	}
 	public function checkAuth($id, $answer) {
-//		$imgfile = CONFIG_LOCALROOT . "www/robocheck/$id.jpg";
+        $imgfile = CONFIG_LOCALROOT . "www/robocheck/"
+        . substr($id, 0, 2) . "/$id.jpg";
 		$keypath = CONFIG_LOCALROOT . "tmp/robocheck-answers/"
 		. substr($id, 0, 2) . "/$id.txt";
 
@@ -81,13 +82,13 @@ class Authenticator {
 
 		$a = chop(file_get_contents($keypath));
 
-//		unlink($imgfile);
-		unlink($answerfile);
+    	unlink($imgfile);
+		unlink($keypath);
 
 		return ($a == $answer);
 	}
 	public function verify() {
-		$fh = fopen(CONFIG_PW_FILE, 'r');
+		$fh = fopen(CONFIG_LOCALROOT . "robocheck.users", 'r');
 		while ($line = fgets($fh)) {
 			list($user, $pass) = explode(':', trim($line));
 			if ($this->user == $user
@@ -128,7 +129,7 @@ HTML;
 		} return false;
 	}
 	public function getCreds() {
-		$fh = fopen(CONFIG_PW_FILE, 'r');
+		$fh = fopen(CONFIG_LOCALROOT . "robocheck.users", 'r');
 		while ($a = fgets($fh)) { $line = $a; }
 		list($user, $pass) = explode(':', trim($line));
 		$ret = [

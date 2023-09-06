@@ -1,5 +1,5 @@
 <?php $ROOT = '../';
-include "{$ROOT}config.php";
+include "{$ROOT}config/config.php";
 include "{$ROOT}tools/Printer.php";
 include "{$ROOT}tools/Explorer.php";
 include "{$ROOT}tools/Authenticator.php";
@@ -20,9 +20,23 @@ if ($authenticator->isAuthAttempt($_POST)) {
 	}
 }
 if (isset($_GET['dl'])) {
-	$explorer->dl();
-	if (count($explorer->error))
-		$printer->error($explorer->error);
+	$dlstr = $_GET['dl'];
+	$fh = fopen(CONFIG_LOCALROOT . "robocheck.users", 'r');
+	[$u, $p] = explode(':', $dlstr);
+	if (!$u || !$p) {
+		die;
+	}
+
+	while ($line = fgets($fh)) {
+		if ([$u, $p] == explode(':', trim($line))) {
+		$explorer->dl();
+		if (count($explorer->error))
+			$printer->error($explorer->error);
+			}
+	}
+
+	header("HTTP/1.1 401 Unauthorized");
+	die;
 }
 $printer->setLang('en');
 $printer->toHtml($explorer);

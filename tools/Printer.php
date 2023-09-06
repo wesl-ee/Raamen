@@ -40,18 +40,23 @@ HTML;
 	function closingHtml() {
 		$dmcamail = CONFIG_DMCA_MAIL;
 		print <<<HTML
-<hr /><footer>
+<hr />
 
 HTML;
 		print <<<HTML
-		<span>Raamen File Browser v0</span>
-		<span>Created by <a href="https://prettyboytellem.com">
-		Prettyboy-yumi
-		</a></span>
-		<span>Hosted by <a href="mailto:$dmcamail">
+		<span>Raamen File Browser v1</span>,
+		<span>created by <a href="https://wesl.ee/">
+		wesl-ee
+		</a></span><br/>
+		<span>This instance is hosted by <a href="mailto:$dmcamail">
 		$dmcamail</a></span>
 HTML;
 		print <<<HTML
+<aside>
+<img style="border: 1px solid" src="based.gif"><br />
+Raamen is back <strong><a href="https://wesl.ee">TYBG</a></strong>!<br />
+Supports all browsers <strong><a href="https://wesl.ee">TYBG</a></strong>!
+</aside>
 </footer>
 </body>
 </html>

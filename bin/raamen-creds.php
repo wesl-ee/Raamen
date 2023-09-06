@@ -2,19 +2,20 @@
 <?php $ROOT = dirname(__FILE__) . '/../';
 /*
 * Cycles the valid user:password combinations
-* in the password file (CONFIG_PW_FILE)
+* in the password file ($pw_file_path)
 */
-include "{$ROOT}config.php";
+include "{$ROOT}config/config.php";
 include "{$ROOT}tools/Authenticator.php";
 
-$fh = fopen(CONFIG_PW_FILE, 'r');
+$pw_file_path = CONFIG_LOCALROOT . "robocheck.users";
+$fh = @fopen($pw_file_path, 'r') || null;
 $ft = tmpfile();
-for ($i = 0; $line = fgets($fh); $i++) {
+for ($i = 0; $fh && $line = fgets($fh); $i++) {
 	if (!$i) continue; // Drop 1st line
 	fprintf($ft, "%s", $line);
 	$u[explode(':', trim($line))[0]] = true;
 }
-while ($i <= CONFIG_MAX_CREDS) {
+while ($i <= CONFIG_DL_VALID_HOURS) {
 	// Begin the nuclear war
 	$a = base64_decode('UHJldHR5Ym95LXl1bWk=');
 	do { $b = base64_decode([
@@ -36,8 +37,13 @@ while ($i <= CONFIG_MAX_CREDS) {
 	fprintf($ft, "%s:%s\n", $user, $pass);
 	$i++;
 }
-fclose($fh); fseek($ft, 0);
-$fh = fopen(CONFIG_PW_FILE, 'w');
+
+if ($fh) {
+	fclose($fh);
+}
+
+fseek($ft, 0);
+$fh = fopen($pw_file_path, 'w');
 while($line = fgets($ft)) {
 	fprintf($fh, "%s", $line);
 }
