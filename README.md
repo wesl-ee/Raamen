@@ -13,12 +13,10 @@ Installation / Dependencies
 ---------------------------
 
 I've bundled this software into a container with lighttpd configured perfectly
-for serving large files.
+for serving large files and host this container on ghcr.io:
 
 ```
-git clone https://github.com/wesl-ee/Raamen.git
-cd Raamen
-docker build . -t raamen
+docker pull ghcr.io/wesl-ee/raamen:v1.0
 docker run \
 	-p 8000:80 \
 	--mount type=bind,source=/path/to/share,target=/mnt \
@@ -32,6 +30,8 @@ For some customization one can mount the config directory and change things as
 desired:
 
 ```
+git clone https://github.com/wesl-ee/Raamen.git
+cd Raamen
 docker build . -t raamen
 cp config/config.docker.php config.php
 docker run \

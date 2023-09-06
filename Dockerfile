@@ -1,4 +1,7 @@
 FROM alpine:latest
+LABEL org.opencontainers.image.source=https://github.com/wesl-ee/raamen
+LABEL org.opencontainers.image.description="Barebones File Server"
+LABEL org.opencontainers.image.licenses="Modified BSD"
 
 RUN apk update && apk upgrade
 RUN apk add lighttpd lighttpd-mod_auth

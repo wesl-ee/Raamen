@@ -15,12 +15,11 @@ define("CONFIG_WEBROOT", "/");
 * Also, the trailing slash is important.
 */
 define("CONFIG_LOCALROOT", "/app/");
-/* CONFIG_MAX_CREDS
+/* CONFIG_DL_VALID_HOURS
 * Maximum users listed in robocheck.users file. They're rotated every hour by a
 * cron job so 8 means download links are valid for only 8 hours
 */
 define("CONFIG_DL_VALID_HOURS", 8);
-
 /* CONFIG_DMCA_MAIL
 * They're going to come after you, it's only a matter of time!
 */
